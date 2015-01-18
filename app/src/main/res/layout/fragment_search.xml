@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1">
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.04">
+
+        <AutoCompleteTextView
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:id="@+id/editSong"
+            android:text=""
+            android:textStyle="italic"
+
+            android:paddingTop="25dp"
+            android:layout_weight="0.04"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+
+        <AutoCompleteTextView
+            android:layout_width="200dp"
+            android:layout_height="60dp"
+            android:text="justin bieber"
+            android:textStyle="italic"
+            android:id="@+id/editSinger"
+            android:padding="10dp"
+            android:layout_weight="0.04"
+            android:layout_below="@+id/editSong"
+            android:layout_alignLeft="@+id/editSong"
+            android:layout_alignStart="@+id/editSong" />
+
+
+    </RelativeLayout>
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="96dp"
+        android:layout_height="35dp"
+        android:text="Seach"
+        android:gravity="center"
+        android:id="@+id/searchButton"
+        android:padding="10dp"
+        android:layout_gravity="center_horizontal" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/scrollView">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="Lyrics Here:"
+            android:id="@+id/textView"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:textStyle="italic"
+            />
+    </ScrollView>
+
+</LinearLayout>
