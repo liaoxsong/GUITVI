@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,11 +30,68 @@ import co.songliao.guitvi.data.SongContract;
  * Created by Song on 1/4/15.
  */
 
-    public class ListFragment extends Fragment {
+public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
         private Context mContext;
         private final String LIST_TAG = "list";
 
-        private List<Song> songs = new ArrayList<Song>();
+    private static final String [] projection = new String[]{
+            SongContract.SongData._ID,
+            SongContract.SongData.COL_TITLE,
+            SongContract.SongData.COL_SINGER,
+            SongContract.SongData.COL_ALBUM,
+            SongContract.SongData.COL_ALBUMCOVER,
+            SongContract.SongData.COL_LYRICS,
+
+    };
+
+    //these indices are linked to loaders
+    public static final int COL_ID = 0;
+    public static final int COL_TITLE = 1;
+    public static final int COL_SINGER = 2;
+    public static final int COL_ALBUM = 3;
+    public static final int COL_ALBUMCOVER = 4;
+    public static final int COL_LYRICS = 5;
+
+
+    private static final int LIST_LOADER = 1;
+    private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
+
+    ArrayAdapter<Song> adapter;
+    SimpleCursorAdapter mAdapter;
+
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        getLoaderManager().initLoader(LIST_LOADER,null,this);
+        super.onActivityCreated(savedInstanceState);
+    }
+
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(mContext,
+                SongContract.SongData.CONTENT_URI,
+                projection,
+                null,
+                null,
+                null
+                );
+
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+        switch(loader.getId()){
+            case LIST_LOADER:
+                mAdapter.swapCursor(cursor);
+                break;
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+        mAdapter.swapCursor(null);
+
+    }
+
+    private List<Song> songs = new ArrayList<Song>();
 
         public void populateSongData(){
           //  String [] lyrics1 = new String [] {"hey", "how are you doinng" , "my friend"};
@@ -50,8 +111,7 @@ import co.songliao.guitvi.data.SongContract;
              setHasOptionsMenu(true);
         }
 
-        ArrayAdapter<Song> adapter;
-        SimpleCursorAdapter cursorAdapter ;
+
 
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -71,7 +131,6 @@ import co.songliao.guitvi.data.SongContract;
                 startActivity(intent);
             }
             return super.onOptionsItemSelected(item);
-
         }
 
 
@@ -99,7 +158,7 @@ import co.songliao.guitvi.data.SongContract;
                     R.id.singerView,
             };
 
-            cursorAdapter = new SimpleCursorAdapter(
+            mAdapter = new SimpleCursorAdapter(
                     mContext,
                     R.layout.onerow,
                     cursorAllData,
@@ -110,15 +169,16 @@ import co.songliao.guitvi.data.SongContract;
 
 
             ListView list = (ListView) (rootView.findViewById(R.id.songList));
-            // list.setAdapter(adapter);
-            list.setAdapter(cursorAdapter);
+            //
+
+            list.setAdapter(mAdapter);
 
 
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Object obj = cursorAdapter.getItem(position);
+                    Object obj = mAdapter.getItem(position);
                     if(cursorAllData.moveToPosition(position)) {
 
                         int titleIndex = cursorAllData.getColumnIndex(SongContract.SongData.COL_TITLE);
@@ -138,11 +198,21 @@ import co.songliao.guitvi.data.SongContract;
 
                 }
             });
+            //mCallbacks = this;
+
+           // LoaderManager loaderManager = getLoaderManager();
+            ///loaderManager.initLoader(LIST_LOADER,null,mCallbacks);
 
             return rootView;
 
         }
 
+    @Override
+    public void onResume() {
 
+        getLoaderManager().restartLoader(LIST_LOADER,null,this);
+        super.onResume();
     }
+
+}
 

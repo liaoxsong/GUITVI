@@ -5,11 +5,11 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-
 public class GuivActivity extends ActionBarActivity
    {
 
-    //did you know that, writing an phone app is a very complicated process.
+
+       //did you know that, writing an phone app is a very complicated process.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

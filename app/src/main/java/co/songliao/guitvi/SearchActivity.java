@@ -9,11 +9,8 @@ import android.view.MenuItem;
 /**
  * Created by Song on 1/7/15.
  */
-public class SearchActivity extends ActionBarActivity implements SearchFragment.OnSearchFragmentListener {
-    @Override
-    public void onArticleSelected(int position) {
+public class SearchActivity extends ActionBarActivity  {
 
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

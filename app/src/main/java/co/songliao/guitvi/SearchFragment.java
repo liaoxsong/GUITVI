@@ -1,6 +1,5 @@
 package co.songliao.guitvi;
 
-import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -33,34 +32,12 @@ import co.songliao.guitvi.data.SongContract;
 
 
 public class SearchFragment extends Fragment {
-    OnSearchFragmentListener mCallback;
-    public interface OnSearchFragmentListener {
-        public void onArticleSelected(int position);
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try{
-            mCallback = (OnSearchFragmentListener) activity;
-
-
-        }
-        catch(ClassCastException e){
-            throw new ClassCastException(activity.toString()+ " must " +
-                    "implement OnSearchFragmentListener");
-
-        }
-    }
 
     private final String SEARCH_TAG = "search";
-    public boolean hasNew = false;
 
     public SearchFragment() {
         super();
     }
-
-
 
 
 
@@ -208,7 +185,7 @@ public class SearchFragment extends Fragment {
                 lyricsText.setText(result);
                 lyricsFound = true;
               //  Log.v(SEARCH_TAG,"result length is "+result.length());
-                Message.message(mContext,"lyrics found!");
+               // Message.message(mContext,"lyrics found!");
             }
             else{
                 lyricsText.setText(R.string.lyrics_not_found);
@@ -290,23 +267,18 @@ public class SearchFragment extends Fragment {
                     newValue
             );
 
-
-
             if(insertUri!=null){//great success
                 Message.message(mContext,"Succesfully saved lyrics");
-                hasNew = true;
+                mContext.getContentResolver().notifyChange(
+                        SongContract.SongData.CONTENT_URI,null
+                );
+
 
             }
             else{
                 Message.message(mContext,"Problem occured during saving");
             }
-
         }
-
-
-
-
     }
-
 
 }
