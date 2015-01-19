@@ -272,13 +272,10 @@ public class SearchFragment extends Fragment {
                 mContext.getContentResolver().notifyChange(
                         SongContract.SongData.CONTENT_URI,null
                 );
-
-
             }
             else{
                 Message.message(mContext,"Problem occured during saving");
             }
         }
     }
-
 }

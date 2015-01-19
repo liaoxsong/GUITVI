@@ -35,9 +35,12 @@
             >
         </activity>
         <provider
-                android:authorities="co.songliao.guitvi"
-                android:name=".data.SongProvider"
+            android:name=".data.SongProvider"
+            android:authorities="co.songliao.guitvi"
+            android:enabled="true"
+            android:exported="true"
         />
+
     </application>
 
 </manifest>

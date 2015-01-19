@@ -35,7 +35,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         private final String LIST_TAG = "list";
 
     private static final String [] projection = new String[]{
-            SongContract.SongData._ID,
+
             SongContract.SongData.COL_TITLE,
             SongContract.SongData.COL_SINGER,
             SongContract.SongData.COL_ALBUM,
@@ -54,9 +54,11 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
 
 
     private static final int LIST_LOADER = 1;
+
     private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
 
     ArrayAdapter<Song> adapter;
+
     SimpleCursorAdapter mAdapter;
 
     @Override
@@ -68,7 +70,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(mContext,
                 SongContract.SongData.CONTENT_URI,
-                projection,
+                null,
                 null,
                 null,
                 null
@@ -178,16 +180,16 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-                    Object obj = mAdapter.getItem(position);
-                    if(cursorAllData.moveToPosition(position)) {
+                    Cursor cursor = mAdapter.getCursor();
+                    if(cursor.moveToPosition(position)) {
 
-                        int titleIndex = cursorAllData.getColumnIndex(SongContract.SongData.COL_TITLE);
-                        int singerIndex = cursorAllData.getColumnIndex(SongContract.SongData.COL_SINGER);
-                        int lyricsIndex = cursorAllData.getColumnIndex(SongContract.SongData.COL_LYRICS);
+                        int titleIndex = cursor.getColumnIndex(SongContract.SongData.COL_TITLE);
+                        int singerIndex = cursor.getColumnIndex(SongContract.SongData.COL_SINGER);
+                        int lyricsIndex = cursor.getColumnIndex(SongContract.SongData.COL_LYRICS);
 
-                        String title = cursorAllData.getString(titleIndex);
-                        String singer =cursorAllData.getString(singerIndex);
-                        String lyrics = cursorAllData.getString(lyricsIndex);
+                        String title = cursor.getString(titleIndex);
+                        String singer =cursor.getString(singerIndex);
+                        String lyrics = cursor.getString(lyricsIndex);
 
                         String all = title + "GUITVI"+ singer + "GUITVI"+ lyrics;
                         Intent intent = new Intent(getActivity(), LyricsActivity.class);
@@ -198,10 +200,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
 
                 }
             });
-            //mCallbacks = this;
-
-           // LoaderManager loaderManager = getLoaderManager();
-            ///loaderManager.initLoader(LIST_LOADER,null,mCallbacks);
 
             return rootView;
 
