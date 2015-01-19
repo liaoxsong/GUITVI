@@ -4,6 +4,8 @@ import android.content.ContentProvider;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -34,7 +36,6 @@ public class SongProvider extends ContentProvider {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = SongContract.CONTENT_AUTHORITY;
 
-
         //first matcher the whole table: co.songliao.guitv/song
         matcher.addURI(authority,SongContract.SONG_PATH,SONG);
 
@@ -43,19 +44,9 @@ public class SongProvider extends ContentProvider {
 
         matcher.addURI(authority,SongContract.SONG_PATH+"/*",SINGER);
 
-
-//        matcher.addURI(authority,SongContract.SONG_PATH,TITLE);
-//        matcher.addURI(authority,SongContract.SONG_PATH,SINGER);
-//        matcher.addURI(authority,SongContract.SONG_PATH,ALBUM);
-//        matcher.addURI(authority,SongContract.SONG_PATH,ALBUM_PATH);
-//        matcher.addURI(authority,SongContract.SONG_PATH,LYRICS);
-
         return matcher;
     }
 
-    private static final String sSingerSelection =
-            SongContract.SongData.TABLE_NAME+
-                    "." + SongContract.SongData.COL_SINGER + " = ? ";
 
     public SongProvider() {
         super();
@@ -64,6 +55,8 @@ public class SongProvider extends ContentProvider {
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor cursor;
+        final int matcher = sUriMatcher.match(uri);
+
         switch(sUriMatcher.match(uri)){
 
             //if the incoming URI is coming for everything in SONG table
@@ -120,12 +113,43 @@ public class SongProvider extends ContentProvider {
 
     @Override
     public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+
+        int rowsUpdated;
+        switch(match){
+            case SONG:
+                rowsUpdated = db.update(SongContract.SongData.TABLE_NAME,values,selection,selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri "+ uri);
+
+        }
+        if(rowsUpdated!=0){
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+
+        return rowsUpdated;
     }
 
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
-        return 0;
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        int rowsDeleted;
+        final int match = sUriMatcher.match(uri);
+        switch(match){
+            case SONG:
+                rowsDeleted = db.delete(SongContract.SongData.TABLE_NAME,selection,selectionArgs);
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri "+ uri);
+        }
+        if(selection ==null || rowsDeleted != 0){
+            getContext().getContentResolver().notifyChange(uri,null);
+        }
+
+        //return number of rows deleted
+        return rowsDeleted;
     }
 
 
@@ -149,8 +173,36 @@ public class SongProvider extends ContentProvider {
 
     @Override
     public Uri insert(Uri uri, ContentValues values) {
-        return null;
+        final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
+        final int match = sUriMatcher.match(uri);
+        Uri returnUri;
+        switch(match){
+            case SONG:
+                long id = db.insert(SongContract.SongData.TABLE_NAME,null,values);
+
+                if(id>0){
+                    //giving it a specific id to access
+                    //content://co.songliao.co/song/<id>
+                    returnUri = SongContract.SongData.buildSongUri(id);
+                }
+                else{
+                    throw new SQLException("Failed insert to row "+ uri);
+                }
+                break;
+            default:
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
+
+        }
+
+
+
+        getContext().getContentResolver().notifyChange(uri,null);
+        return returnUri;
     }
+
+    private static final String sSingerSelection =
+            SongContract.SongData.TABLE_NAME+
+                    "." + SongContract.SongData.COL_SINGER + " = ? ";
 
     private Cursor getSongBySinger(Uri uri, String [] projection, String sortOrder){
         String selection = sSingerSelection;

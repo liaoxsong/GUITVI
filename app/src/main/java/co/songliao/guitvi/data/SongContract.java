@@ -25,8 +25,8 @@ public class SongContract {
         public static final String CONTENT_ITEM_TYPE = "vnd.android.cursor.item/"+CONTENT_AUTHORITY+"/" +SONG_PATH;
 
         //Song/1
-        public static Uri buildSongUri(long id){
-            return ContentUris.withAppendedId(CONTENT_URI,id);
+        public static Uri buildSongUri(long rowid){
+            return ContentUris.withAppendedId(CONTENT_URI,rowid);
             //content://co.songliao.guitvi/song/<id>
         }
 

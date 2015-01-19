@@ -1,8 +1,10 @@
 package co.songliao.guitvi;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
-import android.database.sqlite.SQLiteDatabase;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,7 +25,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import co.songliao.guitvi.data.SongContract;
-import co.songliao.guitvi.data.SongDbhelper;
 
 /**
  * Created by Song on 1/7/15.
@@ -32,8 +33,36 @@ import co.songliao.guitvi.data.SongDbhelper;
 
 
 public class SearchFragment extends Fragment {
+    OnSearchFragmentListener mCallback;
+    public interface OnSearchFragmentListener {
+        public void onArticleSelected(int position);
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try{
+            mCallback = (OnSearchFragmentListener) activity;
+
+
+        }
+        catch(ClassCastException e){
+            throw new ClassCastException(activity.toString()+ " must " +
+                    "implement OnSearchFragmentListener");
+
+        }
+    }
 
     private final String SEARCH_TAG = "search";
+    public boolean hasNew = false;
+
+    public SearchFragment() {
+        super();
+    }
+
+
+
+
 
     private Context mContext ;
     private String finalizedTitle;
@@ -179,10 +208,12 @@ public class SearchFragment extends Fragment {
                 lyricsText.setText(result);
                 lyricsFound = true;
               //  Log.v(SEARCH_TAG,"result length is "+result.length());
+                Message.message(mContext,"lyrics found!");
             }
             else{
                 lyricsText.setText(R.string.lyrics_not_found);
                 lyricsFound = false;
+                Message.message(mContext,"lyrics not found!");
             }
             Log.v(SEARCH_TAG,String.valueOf(lyricsFound));
         }
@@ -193,6 +224,7 @@ public class SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Add this line in order for this fragment to handle menu events.
         setHasOptionsMenu(true);
+
 
     }
 
@@ -217,13 +249,13 @@ public class SearchFragment extends Fragment {
 
         if (id ==R.id.save){
             if(lyricsFound){
-                Message.message(mContext,"lyrics found!");
+               //
                 saveData(titleText.getText().toString(),//get unmodified title and singer name
                         singerText.getText().toString(),
                         finalizedLyrics);
             }
             else{
-                Message.message(mContext,"lyrics not found!");
+                //Message.message(mContext,"lyrics not found!");
             }
         }
         return super.onOptionsItemSelected(item);
@@ -231,40 +263,50 @@ public class SearchFragment extends Fragment {
     }
 
     public void saveData(String theTitle, String theSinger,String theLyrics){
+        //first check if lyrics exist in database
+        Cursor cursor = mContext.getContentResolver().query(
+                SongContract.SongData.CONTENT_URI,
+                null,
+                SongContract.SongData.COL_TITLE + " = ? AND " + SongContract.SongData.COL_SINGER +" = ? ",
+                new String []{theTitle,theSinger},
+                null
+        );
+        if( cursor.moveToFirst()) {
 
-        ContentValues content = new ContentValues();
-        content.put(SongContract.SongData.COL_TITLE,theTitle);
-        content.put(SongContract.SongData.COL_SINGER,theSinger);
-        content.put(SongContract.SongData.COL_ALBUM,"");
-        content.put(SongContract.SongData.COL_LYRICS,theLyrics);
+            Message.message(mContext, "Song already in database!:)");
+        }
 
-        SongDbhelper songDbhelper = new SongDbhelper(this.mContext);
-        SQLiteDatabase database = songDbhelper.getWritableDatabase();
+        else{
 
-        long rowID = database.insert(SongContract.SongData.TABLE_NAME,null,content);
+            ContentValues newValue = new ContentValues();
+            newValue.put(SongContract.SongData.COL_TITLE, theTitle);
+            newValue.put(SongContract.SongData.COL_SINGER, theSinger);
+            newValue.put(SongContract.SongData.COL_ALBUM, "");
+            newValue.put(SongContract.SongData.COL_LYRICS, theLyrics);
 
 
-//        Cursor cursor = database.query(SongContract.SongData.TABLE_NAME,
-//                new String[]{SongContract.SongData.COL_LYRICS},
-//                null,
-//                null,
-//                null,
-//                null,
-//                null
-//        );
+            Uri insertUri = mContext.getContentResolver().insert(
+                    SongContract.SongData.CONTENT_URI,
+                    newValue
+            );
 
-//        cursor.moveToLast();
-//        int getColumn = cursor.getColumnIndex(SongContract.SongData.COL_LYRICS);
-//        String sampleValue = cursor.getString(getColumn);
-//        Log.v(SEARCH_TAG,sampleValue);
+
+
+            if(insertUri!=null){//great success
+                Message.message(mContext,"Succesfully saved lyrics");
+                hasNew = true;
+
+            }
+            else{
+                Message.message(mContext,"Problem occured during saving");
+            }
+
+        }
+
+
+
 
     }
-
-    public void checkOutData(){
-
-    }
-
-
 
 
 }

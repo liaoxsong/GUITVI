@@ -6,7 +6,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class GuivActivity extends ActionBarActivity {
+public class GuivActivity extends ActionBarActivity
+   {
 
     //did you know that, writing an phone app is a very complicated process.
     @Override

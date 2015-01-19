@@ -32,6 +32,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium"
             android:text="Give Me Love"
             android:id="@+id/titleView"
+
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="5dp" />

@@ -3,7 +3,9 @@ package co.songliao.guitvi.songtest;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.Uri;
 import android.test.AndroidTestCase;
+import android.util.Log;
 
 import java.util.Map;
 import java.util.Set;
@@ -20,6 +22,27 @@ public class TestProvider extends AndroidTestCase {
     public void testDeleteDb()throws Throwable{
         mContext.deleteDatabase(SongDbhelper.DATABASE_NAME);
     }
+
+    public void tsestDeleteAll(){
+        mContext.getContentResolver().delete(
+                SongContract.SongData.CONTENT_URI,
+                null,
+                null
+        );
+
+        Cursor dc = mContext.getContentResolver().query(
+                SongContract.SongData.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+        dc.close();
+
+        assertEquals(dc.getCount(), 0);
+    }
+
+
 
     public void testInsertRead(){
         SongDbhelper dbhelper = new SongDbhelper(mContext);
@@ -59,13 +82,13 @@ public class TestProvider extends AndroidTestCase {
 
         //this is going to execute to SongProvider.query, which returns a cursor with value
 
-        Cursor cursor = mContext.getContentResolver().query(
-                SongContract.SongData.CONTENT_URI,
-                null,
-                null,
-                null,
-                null
-        );
+//        Cursor cursor = mContext.getContentResolver().query(
+//                SongContract.SongData.CONTENT_URI,
+//                null,
+//                null,
+//                null,
+//                null
+//        );
         //validateCursor(cursor,content);
 
 
@@ -91,9 +114,56 @@ public class TestProvider extends AndroidTestCase {
         );
 
         validateCursor(singerCursor,content);
-        db.close();
 
+        ContentValues content3 = new ContentValues();
+        content3.put(SongContract.SongData.COL_TITLE,"I'm Alive");
+        content3.put(SongContract.SongData.COL_SINGER,"JJ Lin");
+        content3.put(SongContract.SongData.COL_ALBUMCOVER,"New World");
+        content3.put(SongContract.SongData.COL_LYRICS,"Oh I am alive \n Life is so colorful ");
+
+
+        Uri insertSong = mContext.getContentResolver().insert(SongContract.SongData.CONTENT_URI,content3);
+        assertTrue(insertSong!=null);
+        singerCursor.close();
+        idCursor.close();
+
+
+        Cursor cursorAll = mContext.getContentResolver().query(
+                SongContract.SongData.CONTENT_URI,
+                null,
+                null,
+                null,
+                null
+        );
+
+        //logCursor(cursorAll);
+
+//       long deleteRow = mContext.getContentResolver().delete(SongContract.SongData.CONTENT_URI,
+//                "_id = ? ",
+//               new String []{ "2" }
+//               );
+//        assertEquals(deleteRow,1);
+
+
+        ContentValues newC = new ContentValues();
+        newC.put(SongContract.SongData._ID,rowId2);
+        newC.put(SongContract.SongData.COL_SINGER,"Two Direction");
+
+        long updateRows = mContext.getContentResolver().update(
+                SongContract.SongData.CONTENT_URI,
+                newC,
+                SongContract.SongData._ID  +" = ?",
+                new String [] {Long.toString(rowId2)}
+
+        );
+
+        assertEquals(updateRows,1);
+
+        db.close();
     }
+
+
+
 
 
     static void validateCursor(Cursor valueCursor, ContentValues expectedValues) {
@@ -109,5 +179,14 @@ public class TestProvider extends AndroidTestCase {
             assertEquals(expectedValue, valueCursor.getString(idx));
         }
         valueCursor.close();
+    }
+
+    static void logCursor(Cursor cursor){
+        while(cursor.moveToNext()){
+            int getTitleIndex = cursor.getColumnIndex(SongContract.SongData._ID);
+            String id = cursor.getString(getTitleIndex);
+            Log.d("cur",id);
+        }
+
     }
 }

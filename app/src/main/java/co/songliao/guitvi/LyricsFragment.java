@@ -15,6 +15,7 @@ public class LyricsFragment extends Fragment {
 
     public String titleAndLyrics;
 
+    private String all;
 
     public LyricsFragment() {
         setHasOptionsMenu(true);
@@ -42,12 +43,13 @@ public class LyricsFragment extends Fragment {
 
         if(intent!=null && getActivity().getIntent().hasExtra(Intent.EXTRA_TEXT)) {
 
-            titleAndLyrics = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);//this is an ArrayList
-            String [] split = titleAndLyrics.split("GUITVI");
+            all = getActivity().getIntent().getStringExtra(Intent.EXTRA_TEXT);
+            String [] split = all.split("GUITVI");
+
             TextView titleText = (TextView) rootView.findViewById(R.id.titleView);
             TextView lyricsText = (TextView)rootView.findViewById(R.id.lyricsView);
             titleText.setText(split[0]);
-            lyricsText.setText(split[1]);
+            lyricsText.setText(split[2]);
         }
 
 
