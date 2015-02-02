@@ -31,17 +31,16 @@ import co.songliao.guitvi.data.SongContract;
  */
 
 public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
-        private Context mContext;
-        private final String LIST_TAG = "list";
+    private Context mContext;
+    private final String LIST_TAG = "list";
+    //
 
     private static final String [] projection = new String[]{
-
             SongContract.SongData.COL_TITLE,
             SongContract.SongData.COL_SINGER,
             SongContract.SongData.COL_ALBUM,
             SongContract.SongData.COL_ALBUMCOVER,
             SongContract.SongData.COL_LYRICS,
-
     };
 
     //these indices are linked to loaders
@@ -92,28 +91,15 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         mAdapter.swapCursor(null);
 
     }
-
-    private List<Song> songs = new ArrayList<Song>();
-
+         //**not used**/
+        private List<Song> songs = new ArrayList<Song>();
         public void populateSongData(){
-          //  String [] lyrics1 = new String [] {"hey", "how are you doinng" , "my friend"};
-
             songs.add(new Song("I'm yours", "Jason Mraz","From A to Z","well you done done you better felt it \n I'm just so hot that you better melt it \n I felt rigtht through the cracks"));
-            songs.add(new Song("Thinking out loud", "Ed Sheeran","X","when i cannot sweep off your feet \n I will love you till 70 \n my heart will beat hard as 23 "));
-            songs.add(new Song("算什麼男人", "周杰倫","哎哟,不错哦", "親吻你的手 還靠著你的頭 \n 讓你躺胸口 那個人已不是我 \n 這些平常的舉動 現在叫做難過"));
-
-
-            songs.add(new Song("I'm yours", "Jason Mraz","From A to Z","well you done done you better felt it \n I'm just so hot that you better melt it \n I felt rigtht through the cracks"));
-            songs.add(new Song("Thinking out loud", "Ed Sheeran","X","when i cannot sweep off your feet \n I will love you till 70 \n my heart will beat hard as 23 "));
-            songs.add(new Song("算什麼男人", "周杰倫","哎哟,不错哦", "親吻你的手 還靠著你的頭 \n 讓你躺胸口 那個人已不是我 \n 這些平常的舉動 現在叫做難過"));
-
-        }
+        }//**not used**/
 
         public ListFragment() {
              setHasOptionsMenu(true);
         }
-
-
 
         @Override
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
@@ -195,19 +181,14 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                         Intent intent = new Intent(getActivity(), LyricsActivity.class);
                         intent.putExtra(intent.EXTRA_TEXT,all);
                         startActivity(intent);
-
                     }
-
                 }
             });
-
             return rootView;
-
         }
 
     @Override
     public void onResume() {
-
         getLoaderManager().restartLoader(LIST_LOADER,null,this);
         super.onResume();
     }

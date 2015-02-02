@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="co.songliao.guitvi" >
+
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--
+     To retrieve OAuth 2.0 tokens or invalidate tokens to disconnect a user. This disconnect
+     option is required to comply with the Google+ Sign-In developer policies
+    -->
+    <uses-permission android:name="android.permission.USE_CREDENTIALS" /> <!-- To retrieve the account name (email) as part of sign-in: -->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" /> <!-- To auto-complete the email text field in the login form with the user's emails -->
+    <uses-permission android:name="android.permission.READ_PROFILE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
     <application
         android:allowBackup="true"
@@ -19,28 +29,46 @@
         </activity>
         <activity
             android:name=".LyricsActivity"
-            android:label="lyrics">
+            android:label="lyrics" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".GuivActivity"/>
+                android:value=".GuivActivity" />
+            >
+        </activity>
+        <activity
+            android:name=".SearchActivity"
+            android:label="search" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".GuivActivity" />
             >
         </activity>
 
-        <activity
-            android:name=".SearchActivity"
-            android:label="search">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".GuivActivity"/>
-            >
-        </activity>
         <provider
             android:name=".data.SongProvider"
             android:authorities="co.songliao.guitvi"
             android:enabled="true"
-            android:exported="true"
-        />
+            android:exported="true" />
 
+        <service android:name=".accounts.AuthenticatorService" >
+            <intent-filter>
+                <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/authenticator" />
+        </service>
+
+        <activity
+            android:name=".LoginActivity"
+            android:label="@string/title_activity_login"
+            android:windowSoftInputMode="adjustResize|stateHidden" >
+        </activity>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
     </application>
 
 </manifest>

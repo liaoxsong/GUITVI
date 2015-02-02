@@ -1,27 +1,37 @@
 package co.songliao.guitvi;
 
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class GuivActivity extends ActionBarActivity
+import co.songliao.guitvi.adapter.PagerAdapter;
+
+public class GuivActivity extends FragmentActivity
    {
 
-
+    ViewPager viewPager;
        //did you know that, writing an phone app is a very complicated process.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_guiv);
 
+        viewPager = (ViewPager)findViewById(R.id.viewpager);
+        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(pagerAdapter);
 
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, new ListFragment())
-                    .commit();
-        }
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction()
+//                    .add(R.id.container, new ListFragment())
+//                    .commit();
+//        }
+
+
     }
+
 
 
     @Override
