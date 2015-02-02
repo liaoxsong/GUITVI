@@ -17,6 +17,11 @@ public class PagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    private final String [] TITLES = {"List","Search"};
+    @Override
+    public CharSequence getPageTitle(int position){
+        return TITLES[position];
+    }
     @Override
     public Fragment getItem(int position) {
         switch(position){

@@ -1,17 +1,26 @@
 package co.songliao.guitvi;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.astuetz.PagerSlidingTabStrip;
+
 import co.songliao.guitvi.adapter.PagerAdapter;
 
 public class GuivActivity extends FragmentActivity
    {
+    private final Handler handler = new Handler();
 
-    ViewPager viewPager;
+    private ViewPager viewPager;
+    private PagerAdapter pagerAdapter;
+    private PagerSlidingTabStrip tabs;
+    private int currentColor = 0xFF666666;
+    private Drawable oldBackground = null;
        //did you know that, writing an phone app is a very complicated process.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,22 +28,19 @@ public class GuivActivity extends FragmentActivity
 
         setContentView(R.layout.activity_guiv);
 
+
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager());
+        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
-//        if (savedInstanceState == null) {
-//            getSupportFragmentManager().beginTransaction()
-//                    .add(R.id.container, new ListFragment())
-//                    .commit();
-//        }
+        tabs.setDividerPadding(200);
+        tabs.setViewPager(viewPager);
 
 
     }
 
-
-
-    @Override
+       @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.guiv, menu);
@@ -52,6 +58,13 @@ public class GuivActivity extends FragmentActivity
         }
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
+
+
+
 
     /**
      * A placeholder fragment containing a simple view.
