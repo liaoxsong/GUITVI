@@ -7,9 +7,5 @@
         android:orderInCategory="100"
         app:showAsAction="never" />
 
-    <item android:id="@+id/search"
-        android:title="search"
-        android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
-        app:showAsAction="ifRoom"
-        android:actionViewClass="android.widget.SearchView" />
+
 </menu>

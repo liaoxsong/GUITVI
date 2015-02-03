@@ -51,6 +51,7 @@ public class SearchFragment extends Fragment {
     AutoCompleteTextView singerText;
 
     Button searchButton;
+    Button saveButton;
     TextView lyricsText;
 
 
@@ -96,6 +97,8 @@ public class SearchFragment extends Fragment {
         titleText = (AutoCompleteTextView) rootView.findViewById(R.id.editSong);
         singerText = (AutoCompleteTextView) rootView.findViewById(R.id.editSinger);
         searchButton = (Button) rootView.findViewById(R.id.searchButton);
+        saveButton = (Button) rootView.findViewById(R.id.save);
+
         lyricsText = (TextView) rootView.findViewById(R.id.textView);
 
         final ArrayAdapter<String> singerAdapter = new ArrayAdapter<String>
@@ -126,6 +129,7 @@ public class SearchFragment extends Fragment {
         });
 
         searchButton.setOnClickListener(searchHandler);
+        saveButton.setOnClickListener(saveHandler);
 
     }
 
@@ -134,6 +138,16 @@ public class SearchFragment extends Fragment {
             lyricsFound = false;
             fetchData();
         }
+    };
+
+    View.OnClickListener saveHandler = new View.OnClickListener(){
+         public  void onClick(View v){
+             if(lyricsFound){
+                saveData(titleText.getText().toString(),//get unmodified title and singer name
+                        singerText.getText().toString(),
+                        finalizedLyrics);
+            }
+         }
     };
 
     public void fetchData(){
@@ -224,19 +238,7 @@ public class SearchFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id ==R.id.save){
-            if(lyricsFound){
-               //
-                saveData(titleText.getText().toString(),//get unmodified title and singer name
-                        singerText.getText().toString(),
-                        finalizedLyrics);
-            }
-            else{
-                //Message.message(mContext,"lyrics not found!");
-            }
-        }
         return super.onOptionsItemSelected(item);
-
     }
 
     public void saveData(String theTitle, String theSinger,String theLyrics){

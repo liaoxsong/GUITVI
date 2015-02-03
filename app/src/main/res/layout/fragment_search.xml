@@ -1,59 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1">
+    >
+    <AutoCompleteTextView
+        android:layout_width="160dp"
+        android:layout_height="60dp"
+        android:id="@+id/editSong"
+        android:text=""
+        android:textStyle="italic"
+        android:paddingLeft="20dp"
+        android:hint="Song name"
+        android:paddingTop="25dp"
+        android:layout_weight="0.04"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
-    <RelativeLayout
-        android:orientation="vertical"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.04">
+    <AutoCompleteTextView
+        android:layout_width="160dp"
+        android:layout_height="60dp"
 
-        <AutoCompleteTextView
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:id="@+id/editSong"
-            android:text=""
-            android:textStyle="italic"
+        android:textStyle="italic"
+        android:id="@+id/editSinger"
+        android:hint= "Singer name"
+        android:paddingLeft="20dp"
 
-            android:paddingTop="25dp"
-            android:layout_weight="0.04"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" />
-
-        <AutoCompleteTextView
-            android:layout_width="200dp"
-            android:layout_height="60dp"
-            android:text="justin bieber"
-            android:textStyle="italic"
-            android:id="@+id/editSinger"
-            android:padding="10dp"
-            android:layout_weight="0.04"
-            android:layout_below="@+id/editSong"
-            android:layout_alignLeft="@+id/editSong"
-            android:layout_alignStart="@+id/editSong" />
-
-
-    </RelativeLayout>
-
+        android:layout_weight="0.04"
+        android:layout_below="@+id/editSong"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
     <Button
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="96dp"
-        android:layout_height="35dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Seach"
         android:gravity="center"
         android:id="@+id/searchButton"
         android:padding="10dp"
-        android:layout_gravity="center_horizontal" />
+        android:layout_alignBottom="@+id/editSinger"
+        android:layout_toRightOf="@+id/editSinger"
+        android:layout_toEndOf="@+id/editSinger" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Save"
+        android:id="@+id/save"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignBottom="@+id/editSinger"
+        android:layout_toRightOf="@+id/searchButton"
+        android:layout_toEndOf="@+id/searchButton" />
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/scrollView">
+        android:id="@+id/scrollView"
+        android:layout_below="@+id/editSinger">
 
         <TextView
             android:layout_width="match_parent"
@@ -66,10 +70,6 @@
             android:textStyle="italic"
             />
     </ScrollView>
-    <android.support.v4.view.ViewPager
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-</LinearLayout>
+
+</RelativeLayout>

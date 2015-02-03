@@ -12,14 +12,12 @@ import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +72,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                 null,
                 null
                 );
-
     }
 
     @Override
@@ -89,7 +86,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
-
     }
          //**not used**/
         private List<Song> songs = new ArrayList<Song>();
@@ -105,30 +101,14 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         public void onCreateOptionsMenu(Menu menu, MenuInflater inflater){
            menu.clear();
            inflater.inflate(R.menu.menu_list,menu);
-           MenuItem searchItem = menu.findItem(R.id.search_song);
-
         }
-
-        @Override
-        public boolean onOptionsItemSelected(MenuItem item) {
-            int id = item.getItemId();
-
-            if (id ==R.id.search_song){
-                Intent intent = new Intent(getActivity(),SearchActivity.class);
-                Toast.makeText(getActivity(),"Search clicked",Toast.LENGTH_SHORT).show();
-                startActivity(intent);
-            }
-            return super.onOptionsItemSelected(item);
-        }
-
 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_guiv, container, false);
-            rootView.setBackgroundColor(getResources().getColor(android.R.color.background_dark));
-            mContext = getActivity().getApplicationContext();
 
+            mContext = getActivity().getApplicationContext();
 
             final Cursor cursorAllData = mContext.getContentResolver().query(
                     SongContract.SongData.CONTENT_URI,
@@ -154,13 +134,8 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                     to,
                     0
             );
-
-
             ListView list = (ListView) (rootView.findViewById(R.id.songList));
-            //
-
             list.setAdapter(mAdapter);
-
 
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
