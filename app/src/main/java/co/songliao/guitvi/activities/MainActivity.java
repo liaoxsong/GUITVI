@@ -6,14 +6,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.viewpagerindicator.TitlePageIndicator;
 
 import co.songliao.guitvi.R;
 import co.songliao.guitvi.adapter.PagerAdapter;
+import co.songliao.guitvi.fragments.ListFragment;
 
-public class GuivActivity extends FragmentActivity
+public class MainActivity extends FragmentActivity
    {
     private final Handler handler = new Handler();
 
@@ -26,7 +26,7 @@ public class GuivActivity extends FragmentActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_guiv);
+        setContentView(R.layout.activity_main);
 
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
@@ -34,7 +34,7 @@ public class GuivActivity extends FragmentActivity
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
-        viewPager.setOnPageChangeListener(listener);
+        //viewPager.setOnPageChangeListener(listener);
         indicator.setViewPager(viewPager);
         indicator.setOnPageChangeListener(listener);
 
@@ -49,19 +49,22 @@ public class GuivActivity extends FragmentActivity
            public void onPageSelected(int position) {
                switch (position){
                    case 0:
-                       Toast.makeText(getApplicationContext(), "on page selected 0", Toast.LENGTH_SHORT).show();
+                       ListFragment listFragment = (ListFragment) pagerAdapter.instantiateItem(viewPager, position);
+                       //ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(
+                        //       "android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
+                       listFragment.onResume();
 
                    case 1:
-                       Toast.makeText(getApplicationContext(), "on page selected 1" , Toast.LENGTH_SHORT).show();
+                       //do nothing yet
 
                    default:
                        break;
                }
+
            }
 
            @Override
            public void onPageScrollStateChanged(int state) {
-
            }
        };
     public boolean onCreateOptionsMenu(Menu menu) {

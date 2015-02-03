@@ -72,7 +72,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        getLoaderManager().initLoader(LIST_LOADER,null,this);
+        getLoaderManager().initLoader(LIST_LOADER, null, this);
         super.onActivityCreated(savedInstanceState);
     }
 
@@ -118,10 +118,11 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_guiv, container, false);
+            View rootView = inflater.inflate(R.layout.fragment_list, container, false);
 
             mContext = getActivity().getApplicationContext();
 
+           // getActivity().getContentResolver().registerContentObserver(SongContract.SongData.CONTENT_URI, true, mContentObserver);
             final Cursor cursorAllData = mContext.getContentResolver().query(
                     SongContract.SongData.CONTENT_URI,
                     null,
@@ -176,6 +177,14 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             return rootView;
         }
 
+//    private ContentObserver updateObserver = new ContentObserver(new Handler()) {
+//        @Override
+//        public void onChange(boolean selfChange) {
+//           // getLoaderManager().restartLoader(LIST_LOADER, null,this); // With appropriate loader args here
+//            getLoaderManager().restartLoader(LIST_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Cursor>) this);
+//        }
+//    };
+
     @Override
     public void onResume() {
 
@@ -183,5 +192,10 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         super.onResume();
     }
 
+    @Override
+    public void onDestroy() {
+       // getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
+        super.onDestroy();
+    }
 }
 
