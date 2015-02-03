@@ -1,4 +1,4 @@
-package co.songliao.guitvi;
+package co.songliao.guitvi.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,6 +23,9 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import co.songliao.guitvi.Message;
+import co.songliao.guitvi.R;
+import co.songliao.guitvi.adapter.OnPageSelectedListener;
 import co.songliao.guitvi.data.SongContract;
 
 /**
@@ -31,7 +34,7 @@ import co.songliao.guitvi.data.SongContract;
 
 
 
-public class SearchFragment extends Fragment {
+public class SearchFragment extends Fragment implements OnPageSelectedListener {
 
     private final String SEARCH_TAG = "search";
 
@@ -39,6 +42,11 @@ public class SearchFragment extends Fragment {
         super();
     }
 
+    public void onPageSelected(){
+        if(isAdded()) {
+            Toast.makeText(mContext, "on page selected in list fragment", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private Context mContext ;
@@ -204,7 +212,7 @@ public class SearchFragment extends Fragment {
             else{
                 lyricsText.setText(R.string.lyrics_not_found);
                 lyricsFound = false;
-                Message.message(mContext,"lyrics not found!");
+                Message.message(mContext, "lyrics not found!");
             }
             Log.v(SEARCH_TAG,String.valueOf(lyricsFound));
         }

@@ -1,15 +1,16 @@
-package co.songliao.guitvi;
+package co.songliao.guitvi.activities;
 
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
-import com.astuetz.PagerSlidingTabStrip;
+import com.viewpagerindicator.TitlePageIndicator;
 
+import co.songliao.guitvi.R;
 import co.songliao.guitvi.adapter.PagerAdapter;
 
 public class GuivActivity extends FragmentActivity
@@ -18,10 +19,9 @@ public class GuivActivity extends FragmentActivity
 
     private ViewPager viewPager;
     private PagerAdapter pagerAdapter;
-    private PagerSlidingTabStrip tabs;
-    private int currentColor = 0xFF666666;
-    private Drawable oldBackground = null;
-       //did you know that, writing an phone app is a very complicated process.
+
+    private TitlePageIndicator indicator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,17 +30,40 @@ public class GuivActivity extends FragmentActivity
 
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
-        tabs = (PagerSlidingTabStrip) findViewById(R.id.tabs);
+        indicator = (TitlePageIndicator) findViewById(R.id.titleindicator);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(pagerAdapter);
 
-        tabs.setDividerPadding(200);
-        tabs.setViewPager(viewPager);
-
+        viewPager.setOnPageChangeListener(listener);
+        indicator.setViewPager(viewPager);
+        indicator.setOnPageChangeListener(listener);
 
     }
 
-       @Override
+       ViewPager.OnPageChangeListener listener = new ViewPager.SimpleOnPageChangeListener(){
+           @Override
+           public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+           }
+           @Override
+           public void onPageSelected(int position) {
+               switch (position){
+                   case 0:
+                       Toast.makeText(getApplicationContext(), "on page selected 0", Toast.LENGTH_SHORT).show();
+
+                   case 1:
+                       Toast.makeText(getApplicationContext(), "on page selected 1" , Toast.LENGTH_SHORT).show();
+
+                   default:
+                       break;
+               }
+           }
+
+           @Override
+           public void onPageScrollStateChanged(int state) {
+
+           }
+       };
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.guiv, menu);
@@ -58,13 +81,6 @@ public class GuivActivity extends FragmentActivity
         }
         return super.onOptionsItemSelected(item);
     }
-
-
-
-
-
-
-
 
     /**
      * A placeholder fragment containing a simple view.

@@ -1,4 +1,4 @@
-package co.songliao.guitvi;
+package co.songliao.guitvi.fragments;
 
 import android.content.Context;
 import android.content.Intent;
@@ -19,19 +19,31 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import co.songliao.guitvi.R;
+import co.songliao.guitvi.Song;
+import co.songliao.guitvi.activities.LyricsActivity;
+import co.songliao.guitvi.adapter.OnPageSelectedListener;
 import co.songliao.guitvi.data.SongContract;
 
 /**
  * Created by Song on 1/4/15.
  */
 
-public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,OnPageSelectedListener {
     private Context mContext;
     private final String LIST_TAG = "list";
-    //
+
+    public void onPageSelected (){
+
+//            FragmentManager fragmentManager = getChildFragmentManager();
+//
+//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//            fragmentTransaction.add(R.id.FragmentContainer, ListFragment.this);
+//            if(isAdded()) {
+//                Toast.makeText(mContext,"on page selected in list fragment", Toast.LENGTH_SHORT).show();
+//                getLoaderManager().restartLoader(LIST_LOADER, null, this);
+//            }
+    }
 
     private static final String [] projection = new String[]{
             SongContract.SongData.COL_TITLE,
@@ -50,7 +62,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public static final int COL_LYRICS = 5;
 
 
-    private static final int LIST_LOADER = 1;
+    public static final int LIST_LOADER = 1;
 
     private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
 
@@ -87,11 +99,11 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
-         //**not used**/
-        private List<Song> songs = new ArrayList<Song>();
-        public void populateSongData(){
-            songs.add(new Song("I'm yours", "Jason Mraz","From A to Z","well you done done you better felt it \n I'm just so hot that you better melt it \n I felt rigtht through the cracks"));
-        }//**not used**/
+//         //**not used**/
+//        private List<Song> songs = new ArrayList<Song>();
+//        public void populateSongData(){
+//            songs.add(new Song("I'm yours", "Jason Mraz", "From A to Z", "well you done done you better felt it \n I'm just so hot that you better melt it \n I felt rigtht through the cracks"));
+//        }//**not used**/
 
         public ListFragment() {
              setHasOptionsMenu(true);
@@ -159,11 +171,14 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                     }
                 }
             });
+
+
             return rootView;
         }
 
     @Override
     public void onResume() {
+
         getLoaderManager().restartLoader(LIST_LOADER,null,this);
         super.onResume();
     }

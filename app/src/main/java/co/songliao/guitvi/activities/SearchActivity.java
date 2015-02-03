@@ -1,10 +1,13 @@
-package co.songliao.guitvi;
+package co.songliao.guitvi.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import co.songliao.guitvi.R;
+import co.songliao.guitvi.fragments.SearchFragment;
 
 /**
  * Created by Song on 1/7/15.

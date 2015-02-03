@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.view.ViewGroup;
 
-import co.songliao.guitvi.ListFragment;
-import co.songliao.guitvi.SearchFragment;
+import co.songliao.guitvi.fragments.ListFragment;
+import co.songliao.guitvi.fragments.SearchFragment;
 
 /**
  * Created by Song on 2/1/15.
@@ -22,6 +22,7 @@ public class PagerAdapter extends FragmentPagerAdapter {
     public CharSequence getPageTitle(int position){
         return TITLES[position];
     }
+
     @Override
     public Fragment getItem(int position) {
         switch(position){
