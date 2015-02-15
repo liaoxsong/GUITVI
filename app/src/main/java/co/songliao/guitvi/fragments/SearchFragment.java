@@ -25,7 +25,6 @@ import org.jsoup.nodes.Document;
 
 import co.songliao.guitvi.Message;
 import co.songliao.guitvi.R;
-import co.songliao.guitvi.adapter.OnPageSelectedListener;
 import co.songliao.guitvi.data.SongContract;
 
 /**
@@ -34,7 +33,7 @@ import co.songliao.guitvi.data.SongContract;
 
 
 
-public class SearchFragment extends Fragment implements OnPageSelectedListener {
+public class SearchFragment extends Fragment {
 
     private final String SEARCH_TAG = "search";
 

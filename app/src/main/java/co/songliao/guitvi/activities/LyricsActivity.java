@@ -36,8 +36,4 @@ public class LyricsActivity extends ActionBarActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-
-
-
-
 }

@@ -15,60 +15,28 @@ import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
+
+import com.nhaarman.listviewanimations.itemmanipulation.DynamicListView;
 
 import co.songliao.guitvi.R;
-import co.songliao.guitvi.Song;
 import co.songliao.guitvi.activities.LyricsActivity;
-import co.songliao.guitvi.adapter.OnPageSelectedListener;
+import co.songliao.guitvi.adapter.MainListAdapter;
 import co.songliao.guitvi.data.SongContract;
 
 /**
  * Created by Song on 1/4/15.
  */
 
-public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>,OnPageSelectedListener {
+public class ListFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
     private Context mContext;
     private final String LIST_TAG = "list";
 
-    public void onPageSelected (){
-
-//            FragmentManager fragmentManager = getChildFragmentManager();
-//
-//            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//            fragmentTransaction.add(R.id.FragmentContainer, ListFragment.this);
-//            if(isAdded()) {
-//                Toast.makeText(mContext,"on page selected in list fragment", Toast.LENGTH_SHORT).show();
-//                getLoaderManager().restartLoader(LIST_LOADER, null, this);
-//            }
-    }
-
-    private static final String [] projection = new String[]{
-            SongContract.SongData.COL_TITLE,
-            SongContract.SongData.COL_SINGER,
-            SongContract.SongData.COL_ALBUM,
-            SongContract.SongData.COL_ALBUMCOVER,
-            SongContract.SongData.COL_LYRICS,
-    };
-
-    //these indices are linked to loaders
-    public static final int COL_ID = 0;
-    public static final int COL_TITLE = 1;
-    public static final int COL_SINGER = 2;
-    public static final int COL_ALBUM = 3;
-    public static final int COL_ALBUMCOVER = 4;
-    public static final int COL_LYRICS = 5;
-
+    private DynamicListView mDynamicListView;
 
     public static final int LIST_LOADER = 1;
 
-    private LoaderManager.LoaderCallbacks<Cursor> mCallbacks;
-
-    ArrayAdapter<Song> adapter;
-
-    SimpleCursorAdapter mAdapter;
+    MainListAdapter mAdapter;
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
@@ -99,11 +67,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
     public void onLoaderReset(Loader<Cursor> loader) {
         mAdapter.swapCursor(null);
     }
-//         //**not used**/
-//        private List<Song> songs = new ArrayList<Song>();
-//        public void populateSongData(){
-//            songs.add(new Song("I'm yours", "Jason Mraz", "From A to Z", "well you done done you better felt it \n I'm just so hot that you better melt it \n I felt rigtht through the cracks"));
-//        }//**not used**/
 
         public ListFragment() {
              setHasOptionsMenu(true);
@@ -119,10 +82,7 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_list, container, false);
-
             mContext = getActivity().getApplicationContext();
-
-           // getActivity().getContentResolver().registerContentObserver(SongContract.SongData.CONTENT_URI, true, mContentObserver);
             final Cursor cursorAllData = mContext.getContentResolver().query(
                     SongContract.SongData.CONTENT_URI,
                     null,
@@ -134,12 +94,13 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             final String [] columns = new String [] {
                     SongContract.SongData.COL_TITLE,
                     SongContract.SongData.COL_SINGER,};
+
             int [] to = new int [] {
                     R.id.titleView,
                     R.id.singerView,
             };
 
-            mAdapter = new SimpleCursorAdapter(
+            mAdapter = new MainListAdapter(
                     mContext,
                     R.layout.onerow,
                     cursorAllData,
@@ -147,37 +108,62 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                     to,
                     0
             );
-            ListView list = (ListView) (rootView.findViewById(R.id.songList));
-            list.setAdapter(mAdapter);
 
-            list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            mDynamicListView = (DynamicListView)rootView.findViewById(R.id.songList);
+            mDynamicListView.setAdapter(mAdapter);
+//            mDynamicListView.enableSwipeToDismiss( new OnDismissCallback() {
+//                @Override
+//                public void onDismiss(@NonNull ViewGroup viewGroup, @NonNull int[] ints) {
+//
+//                }
+//            });
+
+            mDynamicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
                     Cursor cursor = mAdapter.getCursor();
-                    if(cursor.moveToPosition(position)) {
+                    if (cursor.moveToPosition(position)) {
 
                         int titleIndex = cursor.getColumnIndex(SongContract.SongData.COL_TITLE);
                         int singerIndex = cursor.getColumnIndex(SongContract.SongData.COL_SINGER);
                         int lyricsIndex = cursor.getColumnIndex(SongContract.SongData.COL_LYRICS);
 
                         String title = cursor.getString(titleIndex);
-                        String singer =cursor.getString(singerIndex);
+                        String singer = cursor.getString(singerIndex);
                         String lyrics = cursor.getString(lyricsIndex);
 
-                        String all = title + "GUITVI"+ singer + "GUITVI"+ lyrics;
+                        String all = title + "GUITVI" + singer + "GUITVI" + lyrics;
                         Intent intent = new Intent(getActivity(), LyricsActivity.class);
-                        intent.putExtra(intent.EXTRA_TEXT,all);
+                        intent.putExtra(intent.EXTRA_TEXT, all);
                         startActivity(intent);
                     }
                 }
             });
 
+            mDynamicListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
 
+                    Cursor cursor = mAdapter.getCursor();
+                    if(cursor.moveToPosition(position)){
+                        int idIndex = cursor.getColumnIndex(SongContract.SongData._ID);
+
+                        String theID = cursor.getString(idIndex);
+                        Toast.makeText(mContext, "Long click and delete "+ theID, Toast.LENGTH_LONG).show();
+
+                        mContext.getContentResolver().delete(
+                                SongContract.SongData.CONTENT_URI,
+                                SongContract.SongData._ID + "= ? ",
+                                new String []{ theID }
+                        );
+                        getLoaderManager().restartLoader(LIST_LOADER,null,ListFragment.this);
+                    }
+                    return true;
+                }
+            });
             return rootView;
         }
-
-
 
 
 

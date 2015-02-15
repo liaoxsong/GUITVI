@@ -148,7 +148,6 @@ public class SongProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri,null);
         }
 
-        //return number of rows deleted
         return rowsDeleted;
     }
 
