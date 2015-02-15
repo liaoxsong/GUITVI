@@ -17,6 +17,8 @@ public class PagerAdapter extends FragmentPagerAdapter {
         super(fm);
     }
 
+    private ListFragment listFragment;
+
     private final String [] TITLES = {"List","Search"};
     @Override
     public CharSequence getPageTitle(int position){

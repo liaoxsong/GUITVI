@@ -177,13 +177,9 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
             return rootView;
         }
 
-//    private ContentObserver updateObserver = new ContentObserver(new Handler()) {
-//        @Override
-//        public void onChange(boolean selfChange) {
-//           // getLoaderManager().restartLoader(LIST_LOADER, null,this); // With appropriate loader args here
-//            getLoaderManager().restartLoader(LIST_LOADER, null, (android.app.LoaderManager.LoaderCallbacks<Cursor>) this);
-//        }
-//    };
+
+
+
 
     @Override
     public void onResume() {

@@ -2,6 +2,7 @@ package co.songliao.guitvi.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Menu;
@@ -22,12 +23,12 @@ public class MainActivity extends FragmentActivity
 
     private TitlePageIndicator indicator;
 
+    private Fragment mCurrentFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
-
 
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         indicator = (TitlePageIndicator) findViewById(R.id.titleindicator);
@@ -37,7 +38,6 @@ public class MainActivity extends FragmentActivity
         //viewPager.setOnPageChangeListener(listener);
         indicator.setViewPager(viewPager);
         indicator.setOnPageChangeListener(listener);
-
     }
 
        ViewPager.OnPageChangeListener listener = new ViewPager.SimpleOnPageChangeListener(){
@@ -53,10 +53,10 @@ public class MainActivity extends FragmentActivity
                        //ListFragment listFragment = (ListFragment) getSupportFragmentManager().findFragmentByTag(
                         //       "android:switcher:" + R.id.viewpager + ":" + viewPager.getCurrentItem());
                        listFragment.onResume();
-
+                       break;
                    case 1:
                        //do nothing yet
-
+                       break;
                    default:
                        break;
                }
