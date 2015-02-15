@@ -1,6 +1,8 @@
 package co.songliao.guitvi.fragments;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -111,12 +113,6 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
 
             mDynamicListView = (DynamicListView)rootView.findViewById(R.id.songList);
             mDynamicListView.setAdapter(mAdapter);
-//            mDynamicListView.enableSwipeToDismiss( new OnDismissCallback() {
-//                @Override
-//                public void onDismiss(@NonNull ViewGroup viewGroup, @NonNull int[] ints) {
-//
-//                }
-//            });
 
             mDynamicListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
@@ -141,31 +137,42 @@ public class ListFragment extends Fragment implements LoaderManager.LoaderCallba
                 }
             });
 
+
             mDynamicListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
-                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+                      new AlertDialog.Builder(getActivity()).setTitle("Delete this item?")
+                               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialog, int which) {
+                                       Cursor cursor = mAdapter.getCursor();
+                                       if (cursor.moveToPosition(position)) {
+                                           int idIndex = cursor.getColumnIndex(SongContract.SongData._ID);
+                                           int titleIndex = cursor.getColumnIndex(SongContract.SongData.COL_TITLE);
+                                           String title = cursor.getString(titleIndex);
 
-                    Cursor cursor = mAdapter.getCursor();
-                    if(cursor.moveToPosition(position)){
-                        int idIndex = cursor.getColumnIndex(SongContract.SongData._ID);
+                                           String theID = cursor.getString(idIndex);
 
-                        String theID = cursor.getString(idIndex);
-                        Toast.makeText(mContext, "Long click and delete "+ theID, Toast.LENGTH_LONG).show();
+                                           mContext.getContentResolver().delete(
+                                                   SongContract.SongData.CONTENT_URI,
+                                                   SongContract.SongData._ID + "= ? ",
+                                                   new String[]{theID}
+                                           );
 
-                        mContext.getContentResolver().delete(
-                                SongContract.SongData.CONTENT_URI,
-                                SongContract.SongData._ID + "= ? ",
-                                new String []{ theID }
-                        );
-                        getLoaderManager().restartLoader(LIST_LOADER,null,ListFragment.this);
-                    }
+                                           Toast.makeText(mContext, title +  " is removed ", Toast.LENGTH_LONG).show();
+
+                                           getLoaderManager().restartLoader(LIST_LOADER, null, ListFragment.this);
+
+                                       }
+                                   }
+                               })
+                              .setNegativeButton("cancel", null)
+                              .show();
                     return true;
                 }
             });
             return rootView;
         }
-
-
 
     @Override
     public void onResume() {
