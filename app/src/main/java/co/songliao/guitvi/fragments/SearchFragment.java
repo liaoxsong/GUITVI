@@ -1,4 +1,4 @@
-package co.songliao.guitvi;
+package co.songliao.guitvi.fragments;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -23,6 +23,8 @@ import android.widget.Toast;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import co.songliao.guitvi.Message;
+import co.songliao.guitvi.R;
 import co.songliao.guitvi.data.SongContract;
 
 /**
@@ -39,6 +41,11 @@ public class SearchFragment extends Fragment {
         super();
     }
 
+    public void onPageSelected(){
+        if(isAdded()) {
+            Toast.makeText(mContext, "on page selected in list fragment", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     private Context mContext ;
@@ -51,6 +58,7 @@ public class SearchFragment extends Fragment {
     AutoCompleteTextView singerText;
 
     Button searchButton;
+    Button saveButton;
     TextView lyricsText;
 
 
@@ -96,6 +104,8 @@ public class SearchFragment extends Fragment {
         titleText = (AutoCompleteTextView) rootView.findViewById(R.id.editSong);
         singerText = (AutoCompleteTextView) rootView.findViewById(R.id.editSinger);
         searchButton = (Button) rootView.findViewById(R.id.searchButton);
+        saveButton = (Button) rootView.findViewById(R.id.save);
+
         lyricsText = (TextView) rootView.findViewById(R.id.textView);
 
         final ArrayAdapter<String> singerAdapter = new ArrayAdapter<String>
@@ -126,6 +136,7 @@ public class SearchFragment extends Fragment {
         });
 
         searchButton.setOnClickListener(searchHandler);
+        saveButton.setOnClickListener(saveHandler);
 
     }
 
@@ -134,6 +145,16 @@ public class SearchFragment extends Fragment {
             lyricsFound = false;
             fetchData();
         }
+    };
+
+    View.OnClickListener saveHandler = new View.OnClickListener(){
+         public  void onClick(View v){
+             if(lyricsFound){
+                saveData(titleText.getText().toString(),//get unmodified title and singer name
+                        singerText.getText().toString(),
+                        finalizedLyrics);
+            }
+         }
     };
 
     public void fetchData(){
@@ -190,7 +211,7 @@ public class SearchFragment extends Fragment {
             else{
                 lyricsText.setText(R.string.lyrics_not_found);
                 lyricsFound = false;
-                Message.message(mContext,"lyrics not found!");
+                Message.message(mContext, "lyrics not found!");
             }
             Log.v(SEARCH_TAG,String.valueOf(lyricsFound));
         }
@@ -224,19 +245,7 @@ public class SearchFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id ==R.id.save){
-            if(lyricsFound){
-               //
-                saveData(titleText.getText().toString(),//get unmodified title and singer name
-                        singerText.getText().toString(),
-                        finalizedLyrics);
-            }
-            else{
-                //Message.message(mContext,"lyrics not found!");
-            }
-        }
         return super.onOptionsItemSelected(item);
-
     }
 
     public void saveData(String theTitle, String theSinger,String theLyrics){

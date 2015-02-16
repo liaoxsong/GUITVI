@@ -148,7 +148,6 @@ public class SongProvider extends ContentProvider {
             getContext().getContentResolver().notifyChange(uri,null);
         }
 
-        //return number of rows deleted
         return rowsDeleted;
     }
 
@@ -193,8 +192,6 @@ public class SongProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
 
         }
-
-
 
         getContext().getContentResolver().notifyChange(uri,null);
         return returnUri;

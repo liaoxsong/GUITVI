@@ -1,8 +1,11 @@
-package co.songliao.guitvi;
+package co.songliao.guitvi.activities;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.MenuItem;
+
+import co.songliao.guitvi.R;
+import co.songliao.guitvi.fragments.LyricsFragment;
 
 /**
  * Created by Song on 1/6/15.
@@ -33,8 +36,4 @@ public class LyricsActivity extends ActionBarActivity {
             }
             return super.onOptionsItemSelected(item);
         }
-
-
-
-
 }
