@@ -1,5 +1,6 @@
 package co.songliao.guitvi.activities;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -27,9 +28,7 @@ public class MainActivity extends FragmentActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-
         viewPager = (ViewPager)findViewById(R.id.viewpager);
         indicator = (TitlePageIndicator) findViewById(R.id.titleindicator);
         pagerAdapter = new PagerAdapter(getSupportFragmentManager());
@@ -38,6 +37,7 @@ public class MainActivity extends FragmentActivity
         //viewPager.setOnPageChangeListener(listener);
         indicator.setViewPager(viewPager);
         indicator.setOnPageChangeListener(listener);
+        indicator.setTextColor(Color.BLACK);
     }
 
        ViewPager.OnPageChangeListener listener = new ViewPager.SimpleOnPageChangeListener(){
